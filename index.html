@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haus Careers Choice Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap');
+    
+        body {
+            font-family: 'Sarabun', sans-serif;
+            text-align: center;
+            background: url('8-Character-MAIN-UpSizeFULL-BG-RED.png') no-repeat center center fixed;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+    width: 90%; /* ปรับความกว้างอัตโนมัติตามหน้าจอ */
+    max-width: 374px; /* จำกัดความกว้างสูงสุด */
+    height: auto; /* ให้ขนาดปรับตามเนื้อหา */
+    margin: 30px auto;
+    padding: 15px;
+    background: transparent;
+    border-radius: 10px;    
+        }
+        #question {
+            font-size: 18px;
+        }
+
+ .choice-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px; /* ลดขนาดฟอนต์ */
+    border: none;
+    background: #FFFFFF;
+    color: black;
+    cursor: pointer;
+    border-radius: 5px;
+        }
+        .choice-btn:hover {
+            background: #b5b5b5; /* สีเขียวเข้มขึ้นเมื่อกด */
+        } 
+        img {
+            max-width: 70%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .intro-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .intro-container img {
+            max-width: 80%;
+            margin-bottom: 30px;
+        }
+              .result-container {
+            display: none;
+            text-align: center;
+            margin-top: 5px;
+        }
+      .result-content {
+    text-align: center;
+    background-color: transparent;
+    padding: 20px 10px; /* บน-ล่าง 20px, ซ้าย-ขวา 10px */
+    border-radius: 5px;
+    max-width: 80%; /* ลดความกว้าง */
+    margin: auto;
+    box-shadow: none;
+    border: 3px dashed #cfcccc;
+    position: relative;
+        }
+        .result-header {
+            background-color: Black;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .result-footer {
+            height: 25px; /* หรือกำหนดค่าตามต้องการ */
+            background-color: black;
+            padding: 2px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            margin-top: 10px; /* ขยับลงจากทักษะ */
+        }
+        .result-footer img {
+            max-width: 120px; /* ขนาดโลโก้ */
+        }
+        .restart-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 18px;
+            border: none;
+            background: #FFFFFF; /* สีเขียวปกติ */
+            color: black;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .restart-btn:hover {
+            background: #b5b5b5; /* สีเขียวเข้มขึ้นเมื่อกด */
+        }
+        .result-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-bottom: 1px;
+        }
+
+  .result-image-container img {
+    width: 100%; /* หรือใช้ 100% ถ้าต้องการให้เต็มพื้นที่ */
+    max-width: 4000px; /* กำหนดขนาดสูงสุดเพื่อไม่ให้รูปใหญ่เกินไป */
+    height: auto; /* รักษาอัตราส่วนของรูป */
+    display: block; /* ทำให้รูปอยู่ตรงกลาง */
+    margin: 0 auto; /* จัดกึ่งกลาง */
+}
+        
+    </style>
+</head>
+<body>
+
+    <div class="intro-container" id="intro-page">
+        <img src="8-Character-MAIN-UpSizeFULL-RED.png" alt="Career Image">
+         <button class="choice-btn" onclick="startTest()">ไปกันเลยยยยย!</button>
+    </div>
+
+    <div class="container" id="question-page" style="display: none;">
+        <img id="question-image" src="" alt="Question Image" style="width: 100%; max-width: 800px; height: auto; display: block; margin: 0 auto 20px;">
+        <h1 id="question">Loading...</h1>
+        <div id="choices"></div>
+        <div class="skills-box" id="skills"></div>
+    </div>
+
+<div class="result-container" id="result-page">
+        <div class="result-content">
+            <!-- แถบด้านบน -->
+            <div class="result-header">Character คุณคือ</div>
+
+            <!-- Major Image Section -->
+            <div class="result-image-container">
+                <h3 id="flower-name" style="margin-bottom: 10px;font-size: 15px;">ชื่อดอกไม้</h3>
+                <img id="major-image" src="" alt="Major Image" style="display: none; width: 70%; max-width: 1000px; border-radius: 10px;">
+            </div>
+
+            <!-- Career Result Title -->
+         <h2 id="career-result" style="margin-top: 1px; font-size: 15px;"></h2>
+
+            <!-- Skills Text -->
+            <p id="result-skills" style="margin-top: 1px; font-size: 15px;"></p>
+
+            <!-- แถบด้านล่างสำหรับใส่โลโก้ -->
+            <div class="result-footer">
+            <img src="JOBBKK-HausCareers-LOGO.png" alt="JOBBKK Logo" style="width: 200px; height: auto;">
+            </div>
+        </div>
+
+        <!-- ปุ่มรีสตาร์ท อยู่ล่างสุดของหน้า นอกกรอบ -->
+        <button class="restart-btn" onclick="restartTest()">เล่นอีกรอบ</button>
+    </div>
+
+
+    <script>
+        const questions = [
+            { 
+                text: "ถ้าต้องทำโปรเจกต์กลุ่ม คุณจะรับบท... ", 
+                image: "8-Character-MAIN-TEXT-2Character.png", 
+                choices: [
+                    "คนพรีเซนต์ เท่ๆ จบให้ปัง", 
+                    "คนวาดรูป สร้างโลโก้ ทำปกสไลด์สวยจนเพื่อนอึ้ง"
+                ],
+                results: [
+                    [0, 4, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 4, 0, 0, 0, 0, 0]
+                ]
+            },
+            { 
+                text: "วันหยุดในฝันของคุณคือ...", 
+                image: "8-Character-MAIN-TEXT-2Character.png",
+                choices: [
+                    "อยู่บ้านจัด TikTok 7 คลิป รัวๆ", 
+                    "ทำแผนธุรกิจเปิดแบรนด์เสื้อผ้ากับเพื่อน"
+                ],
+                results: [
+                    [0, 4, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 4]
+                ]
+            },
+            { 
+                text: "ถ้าคุณเป็น Meme คุณจะเป็นแบบไหน?", 
+                image: "8-Character-MAIN-TEXT-2Character.png",
+                choices: [
+                    "หน้านิ่ง แต่พิมพ์แคปชั่นแสบสัน",  
+                    "Meme เสียดสีแบบมีชั้นเชิง"
+                ],
+                results: [
+                    [0, 0, 0, 0, 0, 0, 0, 4],
+                    [0, 0, 0, 4, 0, 0, 0, 0]
+
+                ]
+            },
+            { 
+                text: "งานอดิเรกที่คุณอินที่สุด?", 
+                image: "8-Character-MAIN-TEXT-2Character.png",
+                choices: [
+                    "อ่านบทสัมภาษณ์คนดัง", 
+                    "ชอบเจอคนใหม่ๆ แล้วจับสังเกตพฤติกรรม"
+                ],
+                results: [
+                    [0, 0, 0, 0, 0, 0, 0, 4],
+                    [0, 0, 0, 0, 4, 0, 0, 0]
+
+                ]
+              },
+            { 
+                text: "เมื่อโดนทักว่า “ทำไมเงียบจัง” คุณจะตอบ...?", 
+                image: "8-Character-MAIN-TEXT-2Character.png",
+                choices: [
+                    "กำลังคิดว่า next content จะเป็นอะไรดี", 
+                    "กำลังคิดว่าเขาพูดแบบนี้เพราะอะไร..."
+                ],
+                results: [
+                    [0, 4, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 4]
+                ]
+            },
+            { 
+                text: "ถ้าให้เลือกทำแคมเปญหนึ่งในชีวิต คุณจะ...", 
+                image: "8-Character-MAIN-TEXT-2Character.png",
+                choices: [
+                    "ทำแคมเปญเพื่อสร้างกระแสในโลกโซเชียล", 
+                    "ทำแคมเปญให้ยอดขายพุ่ง"
+                ],
+                results: [
+                    [0, 4, 0, 0, 0, 0, 0, 0], 
+                    [0, 0, 0, 0, 0, 0, 4, 0]
+                ]
+            },
+            { 
+                text: "คุณใช้เวลาบนหน้าจอมือถือไปกับ...?", 
+                image: "8-Character-MAIN-TEXT-2Character.png",
+                choices: [
+                    "TikTok, X, IG – เลื่อนวนๆ ไม่หยุด", 
+                    "Chat กับคน 4 กลุ่มพร้อมกัน"
+                ],
+                results: [
+                    [4, 0, 0, 0, 0, 0, 0, 0], 
+                    [0, 0, 0, 0, 0, 0, 0, 4]
+                ]
+            },
+            { 
+                text: "เพื่อนขอให้ช่วยคิด content คุณจะ...?", 
+                image: "8-Character-MAIN-TEXT-2Character.png",
+                choices: [
+                    "ยิงคำฮุคแรกให้ติดหู", 
+                    "ช่วยถามว่ากลุ่มเป้าหมายคือใคร"
+                ],
+                results: [
+                    [0, 4, 0, 0, 0, 0, 0, 0], 
+                    [0, 0, 0, 0, 0, 0, 0, 4]
+                ]
+            },
+  {
+    "text": "ถ้าคุณเปิดเพจของตัวเอง คุณจะลงอะไร?",
+    "image": "8-Character-MAIN-TEXT-2Character.png",
+    "choices": [
+      "ลองพูดประเด็นสังคมแบบมีมุมสนุก",
+      "แชร์ประสบการณ์ชีวิตจริงสไตล์ Storytelling"
+    ],
+    "results": [
+      [0, 4, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 4]
+    ]
+  },
+  {
+    "text": "ข้อไหนเป็นนิสัยของคุณ?",
+    "image": "8-Character-MAIN-TEXT-2Character.png",
+    "choices": [
+      "ชอบเล่าเรื่องจนคนรอบข้างต้องฟัง",
+      "คุยได้ทุกคน ทุกเจน ทุกสไตล์"
+    ],
+    "results": [
+      [0, 4, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 4]
+    ]
+  },
+  {
+    "text": "ถ้าให้คุณรีวิวอะไรสักอย่าง คุณจะรีวิว...?",
+    "image": "8-Character-MAIN-TEXT-2Character.png",
+    "choices": [
+      "คอนเทนต์น่าสนใจใน Netflix",
+      "งานอีเวนต์ที่คนเยอะแต่บริการดี"
+    ],
+    "results": [
+      [0, 4, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 4]
+    ]
+  },
+  {
+    "text": "คนรอบตัวมักจะบอกว่าคุณ...?",
+    "image": "8-Character-MAIN-TEXT-2Character.png",
+    "choices": [
+      "มีมุกเยอะ พูดแล้วคนขำ",
+      "อ่านเกมขาด"
+    ],
+    "results": [
+      [0, 4, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 4, 0, 0]
+    ]
+  },
+  {
+    "text": "ถ้าคุณเป็น filter ใน IG คุณจะเป็นแบบไหน?",
+    "image": "8-Character-MAIN-TEXT-2Character.png",
+    "choices": [
+      "ตัวอักษรกระพริบ คำคมเท่ๆ",
+      "ฟิลเตอร์ถามตอบเล่นๆ แบบสุ่ม"
+    ],
+        "results": [
+      [0, 4, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 4]
+    ]
+    },
+  {
+    "text": "ถ้าต้องทำงานกับ AI คุณจะ...?",
+    "image": "8-Character-MAIN-TEXT-2Character.png",
+    "choices": [
+      "ใช้มันเป็นเพื่อนคิด content",
+      "ใช้มันหาวิธีพูดให้คนเข้าใจง่ายขึ้น"
+    ],
+    "results": [
+      [0, 4, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 4]
+    ]
+  },
+  {
+    "text": "ถ้าโลกนี้ไม่มีโซเชียล คุณจะ...",
+    "image": "8-Character-MAIN-TEXT-2Character.png",
+    "choices": [
+      "เขียนจดหมายข่าว",
+      "ทำกิจกรรมให้คนมาเจอกันจริงๆ"
+    ],
+    "results": [
+      [0, 0, 0, 4, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 4]
+    ]
+  }
+        ];
+        let currentQuestion = 0;
+        let totalScore = [0, 0, 0, 0, 0, 0, 0, 0];  // Scores for FTH, PRS, INN, SCI, ANL, INV, ENT, SUP
+
+        function startTest() {
+            document.getElementById("intro-page").style.display = "none";
+            document.getElementById("question-page").style.display = "block";
+            updateQuestion();
+        }
+
+        function nextQuestion(choiceIndex) {
+            for (let i = 0; i < totalScore.length; i++) {
+                totalScore[i] += questions[currentQuestion].results[choiceIndex][i];
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                updateQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function updateQuestion() {
+            document.getElementById("question").innerText = questions[currentQuestion].text;
+            document.getElementById("question-image").src = questions[currentQuestion].image;
+            const choicesDiv = document.getElementById("choices");
+
+            choicesDiv.innerHTML = '';
+
+            for (let i = 0; i < questions[currentQuestion].choices.length; i++) {
+                const button = document.createElement('button');
+                button.classList.add('choice-btn');
+                button.innerText = questions[currentQuestion].choices[i];
+                button.onclick = () => nextQuestion(i);
+                choicesDiv.appendChild(button);
+            }
+        }
+
+       function showResult() {
+    document.getElementById("question-page").style.display = "none"; // ซ่อนหน้าคำถาม
+    document.getElementById("result-page").style.display = "block"; // แสดงหน้าผลลัพธ์
+    const maxScoreIndex = totalScore.indexOf(Math.max(...totalScore));
+    let majorRecommendation = "";
+    let skills = "";
+    let majorImage = ""; // รูปด้านบนชื่อสาขา
+    let flowerName = ""; // ชื่อดอกไม้
+
+    switch (maxScoreIndex) {
+            case 0: 
+            majorRecommendation = "อาชีพแนะนำ : รีวิวสายกิน, Content Creator ด้านอาหาร, นักพัฒนาเมนู";
+            skills = "<strong>ทักษะที่ควรมี :</strong>  รู้ทันเทรนด์, การสื่อสาร, ความคิดสร้างสรรค์";
+            majorImage = "Panda.png";
+            flowerName = "แพนด้า : ช่างเลือก มีรสนิยม ตามเทรนด์ไว"; // เพิ่มชื่อดอกไม้
+            break;
+        case 1:
+            majorRecommendation = "อาชีพแนะนำ : ครีเอเตอร์, อินฟลูเอนเซอร์, พิธีกรออนไลน์";
+            skills = "<strong>ทักษะที่ควรมี :</strong> การเล่าเรื่อง, การสื่อสาร, เข้าใจผู้ชม";
+            majorImage = "Parrot.png";
+            flowerName = "นกแก้ว : พูดคล่อง เสน่ห์แรง ขายเก่ง"; // เพิ่มชื่อดอกไม้
+            break;
+        case 2:
+            majorRecommendation = "อาชีพแนะนำ : AI Prompt Designer, Tech Creator, Product Developer";
+            skills = "<strong>ทักษะที่ควรมี :</strong> การทดลอง, การแก้ปัญหา, ความคิดนอกกรอบ";
+            majorImage = "Octopus.png";
+            flowerName = "ปลาหมึกยักษ์ : คิดไว คล่องแคล่ว แหกกรอบ"; // เพิ่มชื่อดอกไม้
+            break;
+        case 3:
+            majorRecommendation = "อาชีพแนะนำ : นักวิจัย, นักวิทยาศาสตร์, นักวิเคราะห์ข้อมูล";
+            skills = "<strong>ทักษะที่ควรมี :</strong> การคิดเชิงวิพากษ์, การสังเคราะห์ข้อมูล, ความละเอียดรอบคอบ";
+            majorImage = "Polar-Bear.png";
+            flowerName = "หมีขาว : นิ่งลึก แม่นยำ มองไกล"; // เพิ่มชื่อดอกไม้
+            break;
+        case 4:
+            majorRecommendation = "อาชีพแนะนำ: Data Analyst, นักวิเคราะห์การตลาด, UX Researcher";
+            skills = "<strong>ทักษะที่ควรมี :</strong> การวิเคราะห์, สังเกตพฤติกรรม, การจัดการข้อมูล";
+            majorImage = "Owl.png";
+            flowerName = "นกฮูก : เฉียบคม รอบรู้ เก็บรายละเอียด"; // เพิ่มชื่อดอกไม้
+            break;
+        case 5:
+            majorRecommendation = "อาชีพแนะนำ: นักลงทุนคริปโต, นักวางแผนการเงิน, Creator Economy";
+            skills = "<strong>ทักษะที่ควรมี :</strong> วิเคราะห์ข้อมูล, ความเข้าใจธุรกิจ, การวางแผนระยะยาว";
+            majorImage = "Beaver.png";
+            flowerName = "บีเวอร์ : วางแผน ขยัน อดทน"; // เพิ่มชื่อดอกไม้
+            break;
+        case 6:
+            majorRecommendation = "อาชีพแนะนำ: Startup Founder, Creator Brand Owner, Business Strategist";
+            skills = "<strong>ทักษะที่ควรมี :</strong> การบริหารทีม, การตัดสินใจ, การเข้าใจตลาด";
+            majorImage = "Lion.png";
+            flowerName = "สิงโต : กล้าตัดสินใจ นำทีม สง่างาม"; // เพิ่มชื่อดอกไม้
+            break;
+        case 7:
+            majorRecommendation = "อาชีพแนะนำ: คอนเทนต์ดีไซเนอร์, นักออกแบบ UX, นักสร้างคอมมูนิตี้";
+            skills = "<strong>ทักษะที่ควรมี :</strong> ความเข้าใจอารมณ์คน, ความคิดสร้างสรรค์, การทำงานร่วมกัน";
+            majorImage = "Rabbit.png";
+            flowerName = "กระต่าย : อบอุ่น ใส่ใจ เป็นมิตร"; // เพิ่มชื่อดอกไม้
+            break;
+    }
+
+    document.getElementById("question-page").style.display = "none";
+    document.getElementById("result-page").style.display = "block";
+    // แสดงผลรูปภาพด้านบนของชื่อสาขา
+    document.getElementById("major-image").src = majorImage;
+    document.getElementById("major-image").style.display = "block";
+
+    // แสดงชื่อดอกไม้
+    document.getElementById("flower-name").innerText = flowerName;  // เพิ่มการแสดงชื่อดอกไม้
+           
+    // แสดงผลชื่อสาขา
+    document.getElementById("career-result").innerText = majorRecommendation;
+
+    // แสดงผลอาชีพและทักษะที่เกี่ยวข้อง
+    document.getElementById("result-skills").innerHTML = skills;
+}
+function restartTest() {
+    currentQuestion = 0; // รีเซ็ตคำถาม
+    totalScore = [0, 0, 0, 0, 0, 0, 0, 0]; // รีเซ็ตคะแนน
+    document.getElementById("result-page").style.display = "none"; // ซ่อนหน้าผลลัพธ์
+    document.getElementById("intro-page").style.display = "block"; // แสดงหน้าเริ่มต้น
+}
+
+        
+    </script>
+
+</body>
+</html>
